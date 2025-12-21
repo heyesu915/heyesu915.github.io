@@ -64,6 +64,172 @@
     <h1 class="page-type-title"></h1>
     
     
+    <article id="post-React 18 核心知识概览" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+  <h2 class="article-title" itemprop="name">
+    <a href="/2025/12/21/React%2018%20%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E6%A6%82%E8%A7%88/">React 18 核心知识概览</a>
+  </h2>
+  
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2025/12/21/React%2018%20%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E6%A6%82%E8%A7%88/" class="article-date">
+  <time datetime="2025-12-21T02:00:00.000Z" itemprop="datePublished">2025-12-21</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        
+      
+      
+        <p>React 18 核心知识概览</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>核心概念&#x2F;语法</th>
+<th>关键点&#x2F;变更</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心语法</strong></td>
+<td><strong>JSX语法</strong></td>
+<td>类似HTML的JavaScript语法扩展，需用<code>{}</code>嵌入表达式。</td>
+<td>定义组件的UI结构。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>组件类型</strong></td>
+<td>函数组件（主推）和类组件。</td>
+<td>构建可复用的UI单元。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>新渲染API</strong></td>
+<td><code>ReactDOM.createRoot(...).render(...)</code>替代旧的 <code>ReactDOM.render(...)</code>。</td>
+<td>应用入口，启用并发特性。</td>
+</tr>
+<tr>
+<td><strong>组件通信与插槽</strong></td>
+<td><strong>父传子 (Props)</strong></td>
+<td>父组件通过属性向子组件传递数据（字符串、数字、函数、JSX等）。</td>
+<td>数据从父组件流向子组件。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>子传父 (回调函数)</strong></td>
+<td>父组件传递函数给子组件，子组件调用该函数向父组件传递数据。</td>
+<td>子组件通知父组件状态变化。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>插槽 (children)</strong></td>
+<td>使用特殊的 <code>props.children</code>接收组件开始和标签之间的内容。</td>
+<td>创建可复用、内容灵活的容器组件。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>跨层级通信 (Context)</strong></td>
+<td><code>createContext</code>, <code>Provider</code>, <code>useContext</code>，避免多层逐级传递Props。</td>
+<td>多个层级的组件需要共享某些全局状态（如主题、用户信息）。</td>
+</tr>
+<tr>
+<td><strong>React Hooks 速成</strong></td>
+<td><strong>useState</strong></td>
+<td>在函数组件中添加和管理状态。</td>
+<td>管理组件的内部状态（如输入值、开关状态）。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>useEffect</strong></td>
+<td>处理副作用操作（数据获取、订阅、手动操作DOM）。</td>
+<td>在组件渲染后执行与渲染结果无关的操作。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>useContext</strong></td>
+<td>订阅Context的值，简化Context使用。</td>
+<td>在组件中获取通过Context传递的全局值。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="一、核心语法详解与代码示例"><a href="#一、核心语法详解与代码示例" class="headerlink" title="一、核心语法详解与代码示例"></a>一、核心语法详解与代码示例</h3><h4 id="1-JSX-语法要点"><a href="#1-JSX-语法要点" class="headerlink" title="1. JSX 语法要点"></a>1. JSX 语法要点</h4><p>- </p>
+<p>  <strong>根节点</strong>：JSX必须有且只有一个根元素。可以用<code>&lt;div&gt;</code>包裹，或者用空标签<code>&lt;&gt;&lt;/&gt;</code>（也叫Fragment）避免添加无意义的DOM节点。</p>
+<p>- </p>
+<p>  <strong>JavaScript表达式</strong>：在JSX中使用花括号<code>{}</code>可以嵌入任何JavaScript表达式，比如变量、计算、三元运算符等。</p>
+<p>- </p>
+<p>  <strong>属性名</strong>：有些属性名和HTML不同，例如<code>class</code>要写成<code>className</code>，<code>for</code>要写成<code>htmlFor</code>。样式<code>style</code>需要传入一个对象。</p>
+<h4 id="2-组件定义"><a href="#2-组件定义" class="headerlink" title="2. 组件定义"></a>2. 组件定义</h4><p>React 18主推函数组件，因为它更简洁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 1. 函数组件 (推荐)</span><br><span class="line">function Welcome(props) &#123;</span><br><span class="line">  return &lt;h1&gt;Hello, &#123;props.name&#125;!&lt;/h1&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 2. 类组件</span><br><span class="line">class WelcomeClass extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return &lt;h1&gt;Hello, &#123;this.props.name&#125;!&lt;/h1&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-新的渲染入口（React-18重要变更）"><a href="#3-新的渲染入口（React-18重要变更）" class="headerlink" title="3. 新的渲染入口（React 18重要变更）"></a>3. 新的渲染入口（React 18重要变更）</h4><p>这是React 18应用启动的方式，它开启了并发渲染等新特性的大门。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// React 18 的写法</span><br><span class="line">import React from &#x27;react&#x27;;</span><br><span class="line">import ReactDOM from &#x27;react-dom/client&#x27;; // 注意：从 &#x27;react-dom/client&#x27; 引入</span><br><span class="line">import App from &#x27;./App&#x27;;</span><br><span class="line"></span><br><span class="line">// 1. 创建一个React根节点，绑定到HTML中的根元素（通常是id为&quot;root&quot;的div）</span><br><span class="line">const root = ReactDOM.createRoot(document.getElementById(&#x27;root&#x27;));</span><br><span class="line"></span><br><span class="line">// 2. 将根组件App渲染到页面上</span><br><span class="line">root.render(&lt;App /&gt;);</span><br><span class="line">&lt;!-- 这是你的public/index.html文件的一部分 --&gt;</span><br><span class="line">&lt;div id=&quot;root&quot;&gt;&lt;/div&gt; &lt;!-- 我们的React应用最终会挂载到这个div里 --&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="二、组件通信与插槽"><a href="#二、组件通信与插槽" class="headerlink" title="二、组件通信与插槽"></a>二、组件通信与插槽</h3><p>组件通信是React应用的血脉，让数据在不同的组件间流动起来。</p>
+<h4 id="1-父组件向子组件传递数据（Props）"><a href="#1-父组件向子组件传递数据（Props）" class="headerlink" title="1. 父组件向子组件传递数据（Props）"></a>1. 父组件向子组件传递数据（Props）</h4><p>父组件通过属性传递，子组件通过函数参数<code>props</code>接收。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 子组件：显示一条任务信息</span><br><span class="line">function TodoItem(props) &#123;</span><br><span class="line">  // props是一个对象，包含了父组件传递过来的所有属性</span><br><span class="line">  return (</span><br><span class="line">    &lt;div className=&quot;todo-item&quot;&gt;</span><br><span class="line">      &#123;/* 使用props来接收父组件传递的数据 */&#125;</span><br><span class="line">      &lt;span&gt;任务：&#123;props.text&#125;&lt;/span&gt;</span><br><span class="line">      &lt;span&gt;是否完成：&#123;props.isCompleted ? &#x27;是&#x27; : &#x27;否&#x27;&#125;&lt;/span&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 父组件：App</span><br><span class="line">function App() &#123;</span><br><span class="line">  // 父组件定义要传递的数据</span><br><span class="line">  const todoText = &quot;学习React 18&quot;;</span><br><span class="line">  const isDone = false;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;/* 通过属性将数据传递给子组件TodoItem */&#125;</span><br><span class="line">      &lt;TodoItem text=&#123;todoText&#125; isCompleted=&#123;isDone&#125; /&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-子组件向父组件传递数据（回调函数）"><a href="#2-子组件向父组件传递数据（回调函数）" class="headerlink" title="2. 子组件向父组件传递数据（回调函数）"></a>2. 子组件向父组件传递数据（回调函数）</h4><p>本质是父组件传递一个函数给子组件，子组件在适当时机（如按钮点击）调用这个函数，并将数据作为参数传回。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">// 子组件：一个搜索框</span><br><span class="line">function SearchBar(props) &#123;</span><br><span class="line">  const [inputValue, setInputValue] = useState(&#x27;&#x27;);</span><br><span class="line"></span><br><span class="line">  const handleClick = () =&gt; &#123;</span><br><span class="line">    // 子组件调用父组件传递过来的回调函数，并将输入框的值作为参数传回</span><br><span class="line">    props.onSearch(inputValue);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;input </span><br><span class="line">        type=&quot;text&quot; </span><br><span class="line">        value=&#123;inputValue&#125; </span><br><span class="line">        onChange=&#123;(e) =&gt; setInputValue(e.target.value)&#125; </span><br><span class="line">        placeholder=&quot;请输入关键词...&quot; </span><br><span class="line">      /&gt;</span><br><span class="line">      &lt;button onClick=&#123;handleClick&#125;&gt;搜索&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 父组件：App</span><br><span class="line">function App() &#123;</span><br><span class="line">  // 这个函数准备接收来自子组件的数据</span><br><span class="line">  const handleSearch = (keyword) =&gt; &#123;</span><br><span class="line">    // keyword就是子组件传回来的数据</span><br><span class="line">    alert(`您要搜索的是: $&#123;keyword&#125;`);</span><br><span class="line">    // 这里可以执行真正的搜索逻辑，比如发起网络请求</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;/* 将函数 handleSearch 作为 onSearch 属性传递给子组件 */&#125;</span><br><span class="line">      &lt;SearchBar onSearch=&#123;handleSearch&#125; /&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-插槽（Slots）：使用-children"><a href="#3-插槽（Slots）：使用-children" class="headerlink" title="3. 插槽（Slots）：使用 children"></a>3. 插槽（Slots）：使用 <code>children</code></h4><p><code>children</code>是一个特殊的prop，它代表了组件标签内部的内容。这类似于Vue里的插槽，让组件更加灵活。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// 子组件：一个带样式和标题的卡片容器</span><br><span class="line">function Card(props) &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div style=&#123;&#123; border: &#x27;1px solid #ccc&#x27;, padding: &#x27;20px&#x27;, margin: &#x27;10px&#x27; &#125;&#125;&gt;</span><br><span class="line">      &#123;/* 卡的标题由父组件通过prop传递 */&#125;</span><br><span class="line">      &lt;h2&gt;&#123;props.title&#125;&lt;/h2&gt;</span><br><span class="line">      &#123;/* 卡的主要内容区，显示父组件在&lt;Card&gt;和&lt;/Card&gt;之间放入的任何内容 */&#125;</span><br><span class="line">      &lt;div className=&quot;card-body&quot;&gt;</span><br><span class="line">        &#123;props.children&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">      &#123;/* 底部区域，如果父组件传递了footer就显示，否则显示默认内容 */&#125;</span><br><span class="line">      &lt;div className=&quot;card-footer&quot;&gt;</span><br><span class="line">        &#123;props.footer || &lt;div&gt;这是默认底部&lt;/div&gt;&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 父组件：App</span><br><span class="line">function App() &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;/* 使用Card组件，在开始和结束标签之间的内容就是 `children` */&#125;</span><br><span class="line">      &lt;Card title=&quot;卡片一&quot; footer=&#123;&lt;button&gt;自定义按钮&lt;/button&gt;&#125;&gt;</span><br><span class="line">        &lt;p&gt;这是卡片一的内容。&lt;/p&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">          &lt;li&gt;项目1&lt;/li&gt;</span><br><span class="line">          &lt;li&gt;项目2&lt;/li&gt;</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">      &lt;/Card&gt;</span><br><span class="line"></span><br><span class="line">      &lt;Card title=&quot;卡片二&quot;&gt;</span><br><span class="line">        &#123;/* 这里的所有内容都是传递给Card组件的 `children` */&#125;</span><br><span class="line">        &lt;img src=&quot;path/to/image.jpg&quot; alt=&quot;示例&quot; width=&quot;100&quot; /&gt;</span><br><span class="line">        &lt;p&gt;这是一张图片和描述。&lt;/p&gt;</span><br><span class="line">      &lt;/Card&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="三、React-Hooks-速成"><a href="#三、React-Hooks-速成" class="headerlink" title="三、React Hooks 速成"></a>三、React Hooks 速成</h3><p>Hooks让函数组件也能拥有状态和生命周期等能力，是现代React开发的核心。</p>
+<h4 id="1-useState-管理组件状态"><a href="#1-useState-管理组件状态" class="headerlink" title="1. useState- 管理组件状态"></a>1. <code>useState</code>- 管理组件状态</h4><p>用于在函数组件内部定义和修改状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; useState &#125; from &#x27;react&#x27;;</span><br><span class="line"></span><br><span class="line">function Counter() &#123;</span><br><span class="line">  // 1. 使用useState定义一个状态变量count和更新它的函数setCount</span><br><span class="line">  // useState(0) 中的 0 是count的初始值</span><br><span class="line">  const [count, setCount] = useState(0);</span><br><span class="line"></span><br><span class="line">  const increment = () =&gt; &#123;</span><br><span class="line">    // 3. 调用setCount来更新count的值，更新后组件会重新渲染</span><br><span class="line">    setCount(count + 1);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  const decrement = () =&gt; &#123;</span><br><span class="line">    setCount(count - 1);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;h2&gt;简易计数器&lt;/h2&gt;</span><br><span class="line">      &#123;/* 2. 在JSX中直接使用状态变量count */&#125;</span><br><span class="line">      &lt;p&gt;当前计数：&lt;strong&gt;&#123;count&#125;&lt;/strong&gt;&lt;/p&gt;</span><br><span class="line">      &lt;button onClick=&#123;decrement&#125;&gt;-&lt;/button&gt;</span><br><span class="line">      &lt;button onClick=&#123;increment&#125;&gt;+&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-useEffect-处理副作用"><a href="#2-useEffect-处理副作用" class="headerlink" title="2. useEffect- 处理副作用"></a>2. <code>useEffect</code>- 处理副作用</h4><p>副作用：指那些与组件渲染结果无关的操作，如数据获取、设置订阅、手动修改DOM等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; useState, useEffect &#125; from &#x27;react&#x27;;</span><br><span class="line"></span><br><span class="line">function UserProfile(props) &#123;</span><br><span class="line">  const [user, setUser] = useState(null);</span><br><span class="line">  const [loading, setLoading] = useState(true);</span><br><span class="line"></span><br><span class="line">  // useEffect 接收一个函数（副作用函数）和一个可选的依赖数组</span><br><span class="line">  useEffect(() =&gt; &#123;</span><br><span class="line">    // 这个函数会在组件渲染后执行</span><br><span class="line">    console.log(&#x27;副作用函数执行了：获取用户数据&#x27;);</span><br><span class="line"></span><br><span class="line">    // 模拟一个网络请求</span><br><span class="line">    fetch(`/api/users/$&#123;props.userId&#125;`)</span><br><span class="line">      .then(response =&gt; response.json())</span><br><span class="line">      .then(userData =&gt; &#123;</span><br><span class="line">        setUser(userData); // 请求成功，设置用户数据</span><br><span class="line">        setLoading(false); // 设置加载状态为false</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    // 可选的清理函数（类似于类组件中的componentWillUnmount）</span><br><span class="line">    return () =&gt; &#123;</span><br><span class="line">      console.log(&#x27;清理工作，比如取消未完成的网络请求&#x27;);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;, [props.userId]); // 依赖数组：只有当 props.userId 发生变化时，这个effect才会重新执行</span><br><span class="line"></span><br><span class="line">  if (loading) &#123;</span><br><span class="line">    return &lt;p&gt;用户信息加载中...&lt;/p&gt;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;h2&gt;用户信息&lt;/h2&gt;</span><br><span class="line">      &lt;p&gt;姓名：&#123;user.name&#125;&lt;/p&gt;</span><br><span class="line">      &lt;p&gt;邮箱：&#123;user.email&#125;&lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-useContext-跨组件层传递数据"><a href="#3-useContext-跨组件层传递数据" class="headerlink" title="3. useContext- 跨组件层传递数据"></a>3. <code>useContext</code>- 跨组件层传递数据</h4><p>当需要在一个很深的子组件中使用祖先组件传递的数据时，用Context可以避免一层层手动传递Props的麻烦。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; createContext, useContext &#125; from &#x27;react&#x27;;</span><br><span class="line"></span><br><span class="line">// 1. 创建一个Context对象</span><br><span class="line">const ThemeContext = createContext(&#x27;light&#x27;); // &#x27;light&#x27; 是默认值</span><br><span class="line"></span><br><span class="line">// 中间的组件，它不再需要手动传递theme属性</span><br><span class="line">function Toolbar() &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;ThemedButton /&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 深层嵌套的子组件</span><br><span class="line">function ThemedButton() &#123;</span><br><span class="line">  // 3. 在需要使用context值的组件中，使用useContext Hook来获取值</span><br><span class="line">  const theme = useContext(ThemeContext);</span><br><span class="line">  return (</span><br><span class="line">    &lt;button style=&#123;&#123; background: theme === &#x27;dark&#x27; ? &#x27;#333&#x27; : &#x27;#EEE&#x27; &#125;&#125;&gt;</span><br><span class="line">      当前主题是: &#123;theme&#125;</span><br><span class="line">    &lt;/button&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 根组件：App</span><br><span class="line">function App() &#123;</span><br><span class="line">  const [currentTheme, setCurrentTheme] = useState(&#x27;dark&#x27;);</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    // 2. 使用Context.Provider包裹组件树，并通过value属性向下传递当前的值</span><br><span class="line">    &lt;ThemeContext.Provider value=&#123;currentTheme&#125;&gt;</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;Toolbar /&gt; &#123;/* Toolbar组件不需要传递任何关于theme的props */&#125;</span><br><span class="line">        &lt;button onClick=&#123;() =&gt; setCurrentTheme(prev =&gt; prev === &#x27;dark&#x27; ? &#x27;light&#x27; : &#x27;dark&#x27;)&#125;&gt;</span><br><span class="line">          切换主题</span><br><span class="line">        &lt;/button&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    &lt;/ThemeContext.Provider&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结与建议"><a href="#总结与建议" class="headerlink" title="总结与建议"></a>总结与建议</h3><p>1. </p>
+<p>   <strong>核心基础</strong>：理解JSX语法和函数组件的写法，并记住React 18使用<code>ReactDOM.createRoot</code>作为新的渲染入口。</p>
+<p>2. </p>
+<p>   <strong>数据流</strong>：掌握“父传子”（Props）、“子传父”（回调函数）和“插槽”（<code>children</code>）这三种最基本的组件通信方式。</p>
+<p>3. </p>
+<p>   <strong>状态与副作用</strong>：学会使用<code>useState</code>管理组件内部数据，使用<code>useEffect</code>处理异步操作等副作用。</p>
+<p>4. </p>
+<p>   <strong>跨组件通信</strong>：在需要避免“Prop逐层传递”时，使用Context（<code>createContext</code>, <code>Provider</code>, <code>useContext</code>）来优化。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heyesu915.github.io/2025/12/21/React%2018%20%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E6%A6%82%E8%A7%88/" data-id="cuidHxFcye0QESj8DmMfHHZjZ" class="article-share-link">
+        分享
+      </a>
+      
+    </footer>
+
+  </div>
+
+  
+
+  
+
+</article>
+    
     <article id="post-markdown" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 

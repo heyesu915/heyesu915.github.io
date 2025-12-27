@@ -64,6 +64,161 @@
     <h1 class="page-type-title"></h1>
     
     
+    <article id="post-zustand" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+
+    
+    <div class="article-meta">
+      <a href="/2025/12/27/zustand/" class="article-date">
+  <time datetime="2025-12-27T02:44:28.522Z" itemprop="datePublished">2025-12-27</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        
+      
+      
+        <p>可以的 👍<br>我在<strong>保持新手友好、不搞复杂原理</strong>的前提下，把 zustand 的入门版<strong>再展开一层</strong>，你可以把这份当成「从 0 到能独立写 store」的说明书来看。</p>
+<p>下面内容我会 <strong>一步一步解释“为什么要这样写”</strong>，而不是只给代码。</p>
+<hr>
+<h1 id="一、先搞清楚：zustand-到底在干嘛？"><a href="#一、先搞清楚：zustand-到底在干嘛？" class="headerlink" title="一、先搞清楚：zustand 到底在干嘛？"></a>一、先搞清楚：zustand 到底在干嘛？</h1><p>在 React 里，本质只有一个问题：</p>
+<blockquote>
+<p><strong>数据放哪？谁能改？怎么用？</strong></p>
+</blockquote>
+<p>zustand 给出的答案是：</p>
+<ul>
+<li>数据：放在 store 里</li>
+<li>谁能用：任何组件</li>
+<li>怎么改：只能通过你定义好的函数</li>
+</ul>
+<p>它其实就是：<br><strong>一个全局的 useState，但更好管理</strong></p>
+<hr>
+<h1 id="二、最核心的一行代码：create"><a href="#二、最核心的一行代码：create" class="headerlink" title="二、最核心的一行代码：create"></a>二、最核心的一行代码：create</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; create &#125; <span class="keyword">from</span> <span class="string">&#x27;zustand&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>你可以把 <code>create</code> 理解成：</p>
+<blockquote>
+<p>创建一个「全局状态 Hook」</p>
+</blockquote>
+<hr>
+<h2 id="create-的基本结构（重点）"><a href="#create-的基本结构（重点）" class="headerlink" title="create 的基本结构（重点）"></a>create 的基本结构（重点）</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> useStore = <span class="title function_">create</span>(<span class="function">(<span class="params">set, get</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="comment">// 状态</span></span><br><span class="line">  <span class="attr">xxx</span>: ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 修改状态的方法</span></span><br><span class="line">  <span class="attr">action</span>: <span class="function">() =&gt;</span> <span class="title function_">set</span>(...)</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>先记住这三点就行：</p>
+<ol>
+<li><code>set</code>：用来修改状态</li>
+<li><code>get</code>：用来读取当前状态（后面才用）</li>
+<li>返回的是一个对象</li>
+</ol>
+<hr>
+<h1 id="三、最简单的-store（只有状态）"><a href="#三、最简单的-store（只有状态）" class="headerlink" title="三、最简单的 store（只有状态）"></a>三、最简单的 store（只有状态）</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useStore = <span class="title function_">create</span>(<span class="function">() =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>这时你已经有了一个<strong>全局状态</strong>：</p>
+<ul>
+<li>状态名：<code>count</code></li>
+<li>初始值：<code>0</code></li>
+</ul>
+<p>在组件里这样用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = <span class="title function_">useStore</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> state.<span class="property">count</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意这里的写法：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(state) =&gt; state.<span class="property">count</span></span><br></pre></td></tr></table></figure>
+
+<p>意思是：<br>👉 只订阅 <code>count</code>，count 变了才重新渲染</p>
+<hr>
+<h1 id="四、给-store-加“修改状态的能力”（重点）"><a href="#四、给-store-加“修改状态的能力”（重点）" class="headerlink" title="四、给 store 加“修改状态的能力”（重点）"></a>四、给 store 加“修改状态的能力”（重点）</h1><p>状态如果不能改，是没用的。</p>
+<hr>
+<h2 id="1️⃣-set-是怎么工作的？"><a href="#1️⃣-set-是怎么工作的？" class="headerlink" title="1️⃣ set 是怎么工作的？"></a>1️⃣ set 是怎么工作的？</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">set</span>(&#123; <span class="attr">count</span>: <span class="number">1</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>意思是：</p>
+<blockquote>
+<p>把 store 里的 count 改成 1</p>
+</blockquote>
+<hr>
+<h2 id="2️⃣-正确的写法（推荐）"><a href="#2️⃣-正确的写法（推荐）" class="headerlink" title="2️⃣ 正确的写法（推荐）"></a>2️⃣ 正确的写法（推荐）</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">set</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">count</span>: state.<span class="property">count</span> + <span class="number">1</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>原因很简单：</p>
+<ul>
+<li>可以拿到旧值</li>
+<li>不会出并发问题</li>
+</ul>
+<hr>
+<h2 id="3️⃣-完整例子：计数器"><a href="#3️⃣-完整例子：计数器" class="headerlink" title="3️⃣ 完整例子：计数器"></a>3️⃣ 完整例子：计数器</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useCounterStore = <span class="title function_">create</span>(<span class="function">(<span class="params">set</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">count</span>: <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">  <span class="attr">increase</span>: <span class="function">() =&gt;</span></span><br><span class="line">    <span class="title function_">set</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> (&#123; <span class="attr">count</span>: state.<span class="property">count</span> + <span class="number">1</span> &#125;)),</span><br><span class="line"></span><br><span class="line">  <span class="attr">decrease</span>: <span class="function">() =&gt;</span></span><br><span class="line">    <span class="title function_">set</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> (&#123; <span class="attr">count</span>: state.<span class="property">count</span> - <span class="number">1</span> &#125;)),</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p><strong>结构规律：</strong></p>
+<ul>
+<li>状态是普通变量</li>
+<li>方法是普通函数</li>
+<li>都放在一个对象里</li>
+</ul>
+<hr>
+<h1 id="五、在组件中怎么“正确使用”-zustand？"><a href="#五、在组件中怎么“正确使用”-zustand？" class="headerlink" title="五、在组件中怎么“正确使用” zustand？"></a>五、在组件中怎么“正确使用” zustand？</h1><h3 id="❌-错误但常见的写法"><a href="#❌-错误但常见的写法" class="headerlink" title="❌ 错误但常见的写法"></a>❌ 错误但常见的写法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> store = <span class="title function_">useCounterStore</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(store.<span class="property">count</span>);</span><br></pre></td></tr></table></figure>
+
+<p>问题：</p>
+<ul>
+<li>任何状态变化都会触发重渲染</li>
+<li>项目一大就会卡</li>
+</ul>
+<hr>
+<h3 id="✅-推荐写法（非常重要）"><a href="#✅-推荐写法（非常重要）" class="headerlink" title="✅ 推荐写法（非常重要）"></a>✅ 推荐写法（非常重要）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = <span class="title function_">useCounterStore</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> state.<span class="property">count</span>);</span><br><span class="line"><span class="keyword">const</span> increase = <span class="title function_">useCounterStore</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> state.<span class="property">increase</span>);</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; count, increase &#125; = <span class="title function_">useCounterStore</span>(<span class="function">(<span class="params">state</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">count</span>: state.<span class="property">count</span>,</span><br><span class="line">  <span class="attr">increase</span>: state.<span class="property">increase</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p><strong>规则：</strong></p>
+<blockquote>
+<p>只拿你用到的状态</p>
+</blockquote>
+<hr>
+<h1 id="六、zustand-中的异步逻辑（新手必看）"><a href="#六、zustand-中的异步逻辑（新手必看）" class="headerlink" title="六、zustand 中的异步逻辑（新手必看）"></a>六、zustand 中的异步逻辑（新手必看）</h1><h3 id="❓-请求放哪？"><a href="#❓-请求放哪？" class="headerlink" title="❓ 请求放哪？"></a>❓ 请求放哪？</h3><p><strong>新手推荐：</strong></p>
+<ul>
+<li>请求写在组件 &#x2F; api 文件</li>
+<li>请求成功后，用 store 的方法更新状态</li>
+</ul>
+<hr>
+<h2 id="示例：获取图书列表"><a href="#示例：获取图书列表" class="headerlink" title="示例：获取图书列表"></a>示例：获取图书列表</h2><h3 id="store"><a href="#store" class="headerlink" title="store"></a>store</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useBookStore = <span class="title function_">create</span>(<span class="function">(<span class="params">set</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">books</span>: [],</span><br><span class="line">  <span class="attr">setBooks</span>: <span class="function">(<span class="params">books</span>) =&gt;</span> <span class="title function_">set</span>(&#123; books &#125;),</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="组件中"><a href="#组件中" class="headerlink" title="组件中"></a>组件中</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">getBooks</span>().<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    useBookStore.<span class="title function_">getState</span>().<span class="title function_">setBooks</span>(res.<span class="property">data</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么这样做？</strong></p>
+<ul>
+<li>store 保持干净</li>
+<li>不把网络逻辑和状态耦合</li>
+</ul>
+<hr>
+<h1 id="七、get-的用途（了解即可）"><a href="#七、get-的用途（了解即可）" class="headerlink" title="七、get 的用途（了解即可）"></a>七、get 的用途（了解即可）</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">create</span>(<span class="function">(<span class="params">set, get</span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="attr">logout</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> user = <span class="title function_">get</span>().<span class="property">user</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(user);</span><br><span class="line">    <span class="title function_">set</span>(&#123; <span class="attr">user</span>: <span class="literal">null</span> &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>用途：</p>
+<ul>
+<li>在 action 里读取当前状态</li>
+<li>比如根据状态决定下一步</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heyesu915.github.io/2025/12/27/zustand/" data-id="cuidy8XNspmJTPsu4RkmPpfZ7" class="article-share-link">
+        分享
+      </a>
+      
+    </footer>
+
+  </div>
+
+  
+
+  
+
+</article>
+    
     <article id="post-http前六章笔记" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
